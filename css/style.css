@@ -1,0 +1,173 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/*Imagen de fondo InfraQuick*/
+
+.index_fondo {
+    background-image: url(../img/fondo.png);
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+/*Titulo página*/
+.index_titulo_texto {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.index_titulo {
+    font-family: "Questrial", sans-serif;
+    font-size: 200px;
+    font-style: normal;
+    margin: 0 auto;
+    color: #170130;
+}
+
+.index_subtitulo {
+    font-family: "Didact Gothic", sans-serif;
+    font-size: 50px;
+    font-style: normal;
+    color: #331852;
+}
+
+/*contenedor donde esta la descripción y los enlaces*/
+.index_contenedor {
+    background-color: rgb(186, 165, 202);
+    opacity: 90%;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 20%;
+    padding-right: 20%;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+/*Descripción de la página web*/
+.index_descrip {
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-size: 23px;
+    margin-bottom: 100px;
+    text-align: justify;
+    color: #0b0215;
+    opacity: 100%;
+}
+
+/*Configuración del div donde estan los enlaces*/
+.index_caja {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    justify-content: center;
+    gap: 30%;
+    opacity: 100%;
+    width: 100%;
+}
+
+.index_caja a{
+    transition: .5s;
+    background-color: #4b3168;
+    color: #ffffff;
+    width: 300px;
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0px 4px 8px rgba(66, 5, 127, 0.292);
+}
+
+.index_caja div img {
+    transition: .5s;
+    width: 100%;
+    background-color: white;
+}
+
+.index_caja div p {
+    transition: .5s;
+    font-family: "Didact Gothic", sans-serif;
+    font-size: 30px;
+    color: white;
+    margin: 0;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/*Hover de los enlaces*/
+.index_caja a:hover {
+    transition: 0.5s;
+    width: 310px;
+}
+
+.index_caja a:hover {
+    background-color: #331852;
+    box-shadow: 0px 8px 16px rgba(74, 4, 109, 0.433);
+}
+
+.index_caja div img:hover{
+    background-color: #d7d7d7;
+}
+
+.index_caja div p:hover {
+    color: #acacac;
+    font-size: 35px;
+}
+
+/*Pie de página*/
+footer {
+    background-color: rgb(114, 90, 133);
+    opacity: 90%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+    text-align: center;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+footer img {
+    transition: .3s;
+    background-color: white;
+    border-radius: 25px;
+    width: 50px;
+}
+
+footer img:hover{
+    transition: .3s;
+    background-color: rgb(161, 161, 161);
+}
+
+#sobre_nosotros {
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    transition: .3s;
+    font-family: "Didact Gothic", sans-serif;
+}
+
+#sobre_nosotros a{
+    text-decoration: none;
+    color: rgb(224, 223, 223);
+}
+
+#sobre_nosotros a:hover{
+    transition: .3s;
+    color: rgb(161, 161, 161);
+}
