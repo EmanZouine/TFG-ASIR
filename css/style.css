@@ -190,11 +190,20 @@ footer a:hover {
     color: #170130;
 }
 
+.formulario_subtitulo {
+    font-family: "Didact Gothic", sans-serif;
+    font-size: 35px;
+    font-style: normal;
+    color: #331852;
+    margin: 0;
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+/*Contenedor del menu*/
 .formulario_menu {
     background-color: rgb(176, 146, 200);
     opacity: 90%;
-    padding-top: 10px;
-    padding-bottom: 10px;
     display: flex;
     text-align: center;
     flex-direction: row;
@@ -202,31 +211,173 @@ footer a:hover {
     padding-left: 5%;
     padding-right: 5%;
     gap: 15%;
+    position: relative;
+    z-index: 999;
 }
 
-.formulario_menu a{
+/*Configuraciones del desplegable*/
+.formulario_menu a, .desplegable p {
     font-family: "Didact Gothic", sans-serif;
     text-decoration: none;
     color: rgb(27, 7, 43);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0;
 }
 
-.formulario_menu a:hover {
+.formulario_menu a:hover, .desplegable:hover p {
     transition: .3s;
     color: rgb(87, 56, 111);
 }
 
+.desplegable_opc {
+    display: none;
+    position: absolute;
+    background-color: #e3d6eb;
+    min-width: 160px;
+    box-shadow: 0 8px 16px 0 rgba(38, 2, 83, 0.2);
+}
+  
+.desplegable:hover .desplegable_opc {
+    display: block;
+}
+  
+.desplegable_opc a {
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+  
+.desplegable_opc a:hover {
+    background-color: #fbf6ff;
+}
 
 
-.formulario {
+/*Contenedor del formulario*/
+.contenedor_formulario {
     background-color: rgb(186, 165, 202);
     opacity: 90%;
     display: flex;
     flex-wrap: nowrap;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
     justify-content: center;
-    padding-left: 20%;
-    padding-right: 20%;
+    padding-left: 10%;
+    padding-right: 10%;
     padding-top: 100px;
     padding-bottom: 100px;
+    gap: 10%;
 }
+
+.formulario {
+    width: 30%;
+    font-family: "Jost", sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+.formulario_nombre {
+    font-family: "Didact Gothic", sans-serif;
+    font-size: 25px;
+    font-style: normal;
+    color: #200d35;
+    margin: 0;
+    padding-bottom: 30px;
+}
+
+#enviar_btn {
+    margin-top: 20px;
+    width: 60px;
+}
+
+.cont_out {
+    width: 50%;
+    min-height: 300px;
+    max-height: 900px;
+    border: 1px solid #140321;
+    overflow-y: auto;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #0a0313;
+    color: #d6d6d6;
+    line-height: 1.6;
+    box-shadow: 0px 8px 16px rgba(27, 4, 38, 0.433);
+    border-radius: 10px;
+}
+
+.copiar_btn {
+    transition: .3s;
+    padding: 15px;
+    padding-bottom: 10px;
+    background-color: #200a3d;
+    align-items: center;
+    cursor: pointer;
+}
+
+.copiar_btn:hover {
+    transition: .3s;
+    background-color: #2e0c5c;
+    align-items: center;
+}
+
+.copiar_btn button {
+    background-color: transparent;
+    color: #eaecee;
+    border: 0;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    cursor: pointer;
+    font-family: "Didact Gothic", sans-serif;
+    font-size: 17px;
+}
+
+.copiar_btn img {
+    width: 20px;
+}
+
+#output {
+    padding: 15px;
+}
+
+/*EMPIEZO CON LOS FORMULARIOS GENERADOS AUTOMÁTICAMENTE POR JS*/
+
+.formulario_individual {
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.num_form {
+    margin: 0;
+    font-family: "Jost", sans-serif;
+}
+
+.mensaje {
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(23, 6, 44, 0.8);
+    color: #eaecee;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 9999;
+    font-family: "Didact Gothic", sans-serif;
+}
+  
+.mostrar {
+    display: block;
+    animation: fadeOut 5s ease;
+}
+  
+@keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+}
+  
