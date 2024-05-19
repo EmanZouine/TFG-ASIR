@@ -230,12 +230,18 @@ footer a:hover {
     color: rgb(87, 56, 111);
 }
 
+.desplegable {
+    position: relative; /* Añadir position: relative aquí */
+}
+
 .desplegable_opc {
     display: none;
     position: absolute;
     background-color: #e3d6eb;
     min-width: 160px;
     box-shadow: 0 8px 16px 0 rgba(38, 2, 83, 0.2);
+    left: 50%;
+    transform: translateX(-50%);
 }
   
 .desplegable:hover .desplegable_opc {
@@ -344,13 +350,46 @@ footer a:hover {
 .formulario_individual {
     display: flex;
     flex-direction: column;
-    padding-top: 10px;
+    padding-top: 15px;
     padding-bottom: 10px;
+}
+
+.formulario_individual label{
+    margin-top: 5px;
+}
+
+.formulario_individual p{
+    font-size: 20px;
 }
 
 .num_form {
     margin: 0;
     font-family: "Jost", sans-serif;
+}
+
+.formulario_individual input {
+    margin-bottom: 5px;
+}
+
+.nombre_claves {
+    margin-top: 5px;
+}
+
+.ip_pub_container {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.ip_pub {
+    width: auto;
+    margin: 5px;
+}
+
+p.ip_pub_txt {
+    font-size: 15px;;
+    margin: 0px;
+    width: auto;
 }
 
 .mensaje {

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Jost:ital,wght@0,100..900;1,100..900&family=M+PLUS+Rounded+1c&family=Questrial&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/style.css" />
+        <title>InfraQuick: Terraform y Ansible</title>
+    </head>
+    <body>
+        <header>
+            <div class="formulario_fondo"></div>
+            <div class="formulario_titulo_texto">
+                <p class="formulario_titulo">InfraQuick</p>
+            </div>
+        </header>
+
+        <main>
+            <p class="formulario_subtitulo">Terraform</p>
+
+            <div class="formulario_menu">
+
+                <a href="../../index.html">Volver al inicio</a>
+
+                <div class="desplegable">
+                    <p>EC2</p>
+                    <div class="desplegable_opc">
+                        <a href="instancias.html">Instancia</a>
+                        <a href="#">Direcciones IP elásticas</a>
+                        <a href="grp-seg.html">Grupos de seguridad</a>
+                        <a href="balan-carga.html">Balanceador de carga</a>
+                        <a href="grp-autoesc.html">Grupos de autoescalado</a>
+                        <a href="clv-ssh.html">Creación de claves</a>
+                    </div>
+                </div>
+
+                <div class="desplegable">
+                    <p>VPC</p>
+                    <div class="desplegable_opc">
+                        <a href="vpc.html">VPC</a>
+                        <a href="subred.html">Subredes</a>
+                        <a href="tbl-enru.html">Tabla de enrutamiento</a>
+                        <a href="gtw-int.html">Gateway a Internet</a>
+                        <a href="gtw-nat.html">Gateway NAT</a>
+                    </div>
+                </div>
+
+                <div class="desplegable">
+                    <p>S3</p>
+                    <div class="desplegable_opc">
+                        <a href="buckets.html">Buckets</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="contenedor_formulario">
+                <div class="formulario">
+                    <p class="formulario_nombre">Crea una instancia</p>
+                    <div>
+                        <label for="cantidad_instancias" class="nom_cant">Cantidad de instancias:</label>
+                        <select id="cantidad_instancias">
+                            <option selected>- Selecciona -</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </div>
+                    <button id="enviar_btn">Enviar</button>
+                </div>
+
+                <div class="cont_out">
+                    <div class="copiar_btn">
+                        <button id="boton-copiar"> <img src="../../img/copy_icon.png" alt="Copiar"> Copiar Código</button>
+                    </div>
+                    <div id="output"></div>
+                </div>
+            </div>
+            <div id="mensaje" class="mensaje">
+                ¡Código copiado!
+            </div>
+            <script src="../../script/script-copiar.js"></script>
+        </main>
+
+        <footer>
+            <a href="https://docs.ansible.com/ansible/latest/getting_started/introduction.html" target="_blank">Documentación Ansible</a>
+            <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs" target="_blank">Documentación Terraform</a>
+            <a href="https://docs.aws.amazon.com/es_es/" target="_blank">Documentación AWS</a>
+        </footer>
+
+    </body>
+</html>
