@@ -155,7 +155,7 @@ footer a:hover {
 
 
 
-/*------------------------PAGINA DE FORMULARIOS TERRAFORM Y ANSIBLE----------------------------*/
+/*------------------------PÁGINA DE FORMULARIOS TERRAFORM----------------------------*/
 
 
 
@@ -231,7 +231,7 @@ footer a:hover {
 }
 
 .desplegable {
-    position: relative; /* Añadir position: relative aquí */
+    position: relative;
 }
 
 .desplegable_opc {
@@ -302,6 +302,7 @@ footer a:hover {
     border: 1px solid #140321;
     overflow-y: auto;
     font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
     background-color: #0a0313;
     color: #d6d6d6;
     line-height: 1.6;
@@ -371,6 +372,10 @@ footer a:hover {
     margin-bottom: 5px;
 }
 
+.formulario_individual select {
+    margin-bottom: 5px;
+}
+
 .nombre_claves {
     margin-top: 5px;
 }
@@ -419,4 +424,33 @@ p.ip_pub_txt {
       opacity: 0;
     }
 }
-  
+
+
+/*AÑADE COLORES AL TEXTO GENERADO*/
+.celeste {
+    color: #00aeff;
+}
+
+.verde {
+    color: #3ae965;
+}
+
+.naranja {
+    color: #ff6219;
+}
+
+.rosa {
+    color: #c918cf;
+}
+
+.rojo {
+    color: #ee4670;
+}
+
+.morado {
+    color: #801cd3;
+}
+
+.amarillo {
+    color: #d8bb18;
+}
