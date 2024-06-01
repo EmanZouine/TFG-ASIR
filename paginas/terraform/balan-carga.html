@@ -31,6 +31,7 @@
                         <a href="ip-elas.html">Direcciones IP elásticas</a>
                         <a href="grp-seg.html">Grupos de seguridad</a>
                         <a href="#">Balanceador de carga</a>
+                        <a href="plantilla-ami.html">Plantilla AMI</a>
                         <a href="grp-autoesc.html">Grupos de autoescalado</a>
                         <a href="clv-ssh.html">Creación de claves</a>
                     </div>
@@ -59,8 +60,20 @@
             <div class="contenedor_formulario">
                 <div class="formulario">
                     <p class="formulario_nombre">Crea un balanceador de carga</p>
+                    <div class="form_est">
+                        <input type="text" class="nombre-lb" placeholder="Nombre del balanceador de carga" required>
+                        <input type="text" class="nombre-lb-tg" placeholder="Nombre del target group" required>
+                        <div class="ip_pub_container">
+                            <p class="ip_pub_txt">Hacer el balanceador de carga interno</p>
+                            <input type="checkbox" class="ip_pub" id="intlb">
+                          </div>
+                        <input type="text" class="grp-seg" placeholder="Nombre grupo seguridad" required>
+                        <input type="text" class="subred" placeholder="Nombre subredes  |  subred_1 subred_2" required>
+                        <input type="text" class="vpc" placeholder="Nombre VPC" required>
+                        <input type="text" class="etq_nom" placeholder="Etiqueta nombre" required>
+                    </div>
                     <div>
-                        <label for="cantidad" class="nom_cant">Cantidad de instancias:</label>
+                        <label for="cantidad" class="nom_cant">Cantidad de instancias a enlazar:</label>
                         <select id="cantidad">
                             <option selected>- Selecciona -</option>
                             <option value="1">1</option>
