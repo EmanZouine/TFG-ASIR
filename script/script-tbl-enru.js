@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
                       <option value="vpc_peering_connection">VPC Peering Connection</option>
                       <option value="transit_gateway">Gateway de tránsito</option>
                     </select>
-                    <input type="text" class="nombre" placeholder="Nombre de la unión" required>
+                    <input type="text" class="nombre" placeholder="Nombre del recurso" required>
                     <input type="text" class="cidr" placeholder="Bloque CIDR | Ej: 192.168.1.0/24" required>
                 </div>
             `;
@@ -80,10 +80,11 @@ document.addEventListener("DOMContentLoaded", function() {
             const subredes = subredesContainer.querySelectorAll('.formulario_individual');
 
             outputDiv.innerHTML = `
-<span class="morado">#Tabla de ruteo:</span> <br/>
-<span class="amarillo">resource</span> "aws_route_table" "${nombreTbl}" <span class="amarillo">{</span> <br/>
-<span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${vpc}<span class="naranja">.</span>id <br/><br/>
-`;
+<pre>
+<span class="morado">#Tabla de ruteo:</span> 
+<span class="amarillo">resource</span> "aws_route_table" "${nombreTbl}" <span class="amarillo">{</span> 
+    <span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${vpc}<span class="naranja">.</span>id 
+</pre>`;
 
             rutas.forEach(ruta => {
                 const tipo = ruta.querySelector('.tipo').value;
@@ -96,18 +97,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 outputDiv.innerHTML += `
-<span class="amarillo">route</span> <span class="rosa">{</span> <br/>
-<span class="celeste">${tipo}_id</span> <span class="naranja">=</span> <span class="celeste">aws_${tipoId}</span><span class="naranja">.</span>${nombre}<span class="naranja">.</span>id <br/>
-<span class="celeste">cidr_block</span> <span class="naranja">=</span> <span class="verde">"${cidr}"</span><br/>
-<span class="rosa">}</span><br/><br/>
-`;
+<pre>
+    <span class="amarillo">route</span> <span class="rosa">{</span> 
+        <span class="celeste">${tipo}_id</span> <span class="naranja">=</span> <span class="celeste">aws_${tipoId}</span><span class="naranja">.</span>${nombre}<span class="naranja">.</span>id 
+        <span class="celeste">cidr_block</span> <span class="naranja">=</span> <span class="verde">"${cidr}"</span>
+    <span class="rosa">}</span>
+</pre>`;
             });
 
             outputDiv.innerHTML += `
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span><br/>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqNom}"</span><br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
+<pre>
+    <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
+        <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqNom}"</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span><br/>
+</pre>
 `;
 
             subredes.forEach(subred => {
@@ -115,11 +119,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 const nombreTbl = document.querySelector('.nombre-tbl').value;
 
                 outputDiv.innerHTML += `
-<span class="morado">#Asociacion a subred :</span> <br/>
-<span class="amarillo">resource</span> "aws_route_table_association" "${nombreTbl}_${nombreSubred}_association" <span class="amarillo">{</span> <br/>
-<span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${nombreSubred}<span class="naranja">.</span>arn <br/>
-<span class="celeste">route_table_id</span> <span class="naranja">=</span> <span class="celeste">aws_route_table</span><span class="naranja">.</span>${nombreTbl}<span class="naranja">.</span>id <br/>
-<span class="amarillo">}</span><br/><br/>
+<pre>
+<span class="morado">#Asociacion a subred ${nombreSubred}:</span> 
+<span class="amarillo">resource</span> "aws_route_table_association" "${nombreTbl}_${nombreSubred}_association" <span class="amarillo">{</span> 
+    <span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${nombreSubred}<span class="naranja">.</span>arn 
+    <span class="celeste">route_table_id</span> <span class="naranja">=</span> <span class="celeste">aws_route_table</span><span class="naranja">.</span>${nombreTbl}<span class="naranja">.</span>id 
+<span class="amarillo">}</span><br/>
+</pre>
 `;
             });
         }

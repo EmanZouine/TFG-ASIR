@@ -106,19 +106,22 @@ document.addEventListener("DOMContentLoaded", function() {
   
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Subred ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_subnet" "${nombre_sub}" <span class="amarillo">{</span> <br/>
-<span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${vpcnom}<span class="naranja">.</span>id <br/>
-<span class="celeste">cidr_block</span> <span class="naranja">=</span> <span class="verde">"${cidr_block}"</span> <br/>
-<span class="celeste">availability_zone</span> <span class="naranja">=</span> <span class="verde">"${avai_zone}"</span> <br/>
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span><br/>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span><br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<pre>
+<span class="morado">#Subred ${index + 1}:</span> 
+<span class="amarillo">resource</span> "aws_subnet" "${nombre_sub}" <span class="amarillo">{</span> 
+    <span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${vpcnom}<span class="naranja">.</span>id 
+    <span class="celeste">cidr_block</span> <span class="naranja">=</span> <span class="verde">"${cidr_block}"</span> 
+    <span class="celeste">availability_zone</span> <span class="naranja">=</span> <span class="verde">"${avai_zone}"</span> 
+
+    <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
+        <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span><br/>
+</pre>
                 `;
             });
         }
     });
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });

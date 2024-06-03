@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const portMappings = {
         "http": { from: 80, to: 80 },
         "https": { from: 443, to: 443 },
+        "tcp": { from: 0, to: 65535 },
         "ssh": { from: 22, to: 22 },
         "dns": { from: 53, to: 53 },
         "smtp": { from: 25, to: 25 },
@@ -66,6 +67,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const selectedValue = select.value;
                 const fromPortInput = select.parentElement.querySelector(`.from-port.${tipo}`);
                 const toPortInput = select.parentElement.querySelector(`.to-port.${tipo}`);
+                const cidrInput = select.parentElement.querySelector(`.cidr.${tipo}`);
 
                 if (selectedValue === 'tcp') {
                     fromPortInput.value = '';
@@ -74,6 +76,19 @@ document.addEventListener("DOMContentLoaded", function() {
                     toPortInput.removeAttribute('readonly');
                     fromPortInput.classList.remove('blocked');
                     toPortInput.classList.remove('blocked');
+                    cidrInput.value = '';
+                    cidrInput.removeAttribute('readonly');
+                    cidrInput.classList.remove('blocked');
+                } else if (selectedValue === 'icmp') {
+                    fromPortInput.value = portMappings[selectedValue].from;
+                    toPortInput.value = portMappings[selectedValue].to;
+                    fromPortInput.setAttribute('readonly', 'readonly');
+                    toPortInput.setAttribute('readonly', 'readonly');
+                    fromPortInput.classList.add('blocked');
+                    toPortInput.classList.add('blocked');
+                    cidrInput.value = '0.0.0.0/0';
+                    cidrInput.setAttribute('readonly', 'readonly');
+                    cidrInput.classList.add('blocked');
                 } else if (portMappings[selectedValue]) {
                     fromPortInput.value = portMappings[selectedValue].from;
                     toPortInput.value = portMappings[selectedValue].to;
@@ -81,6 +96,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     toPortInput.setAttribute('readonly', 'readonly');
                     fromPortInput.classList.add('blocked');
                     toPortInput.classList.add('blocked');
+                    cidrInput.value = '';
+                    cidrInput.removeAttribute('readonly');
+                    cidrInput.classList.remove('blocked');
                 } else {
                     fromPortInput.value = '';
                     toPortInput.value = '';
@@ -88,6 +106,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     toPortInput.setAttribute('readonly', 'readonly');
                     fromPortInput.classList.add('blocked');
                     toPortInput.classList.add('blocked');
+                    cidrInput.value = '';
+                    cidrInput.removeAttribute('readonly');
+                    cidrInput.classList.remove('blocked');
                 }
             });
         });
@@ -140,19 +161,19 @@ document.addEventListener("DOMContentLoaded", function() {
             const etqNom = document.querySelector('.etq_nom').value;
 
             let outputContent = `
-<p>
-<span class="amarillo">resource</span> "aws_security_group" "${nombreGs}" <span class="amarillo">{</span> <br/>
-<span class="celeste">name</span> <span class="naranja">=</span> <span class="verde">"${nombreGs}"</span> <br/>
-<span class="celeste">description</span> <span class="naranja">=</span> <span class="verde">"${descripcion}"</span> <br/>
-<span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${Vpc}<span class="naranja">.</span>id <br/>
+<pre>
+<span class="amarillo">resource</span> "aws_security_group" "${nombreGs}" <span class="amarillo">{</span>
+    <span class="celeste">name</span> <span class="naranja">=</span> <span class="verde">"${nombreGs}"</span>
+    <span class="celeste">description</span> <span class="naranja">=</span> <span class="verde">"${descripcion}"</span>
+    <span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${Vpc}<span class="naranja">.</span>id
 `;
 
             const TipoEn = document.querySelectorAll('.tipo.entrada');
             const CidrEn = document.querySelectorAll('.cidr.entrada');
 
             TipoEn.forEach(function(tipoSelect, index) {
-                const tipo = tipoSelect.value;
-                const cidr = CidrEn[index].value;
+                const tipo = tipoSelect.value === 'icmp' ? 'icmp' : 'tcp';
+                const cidr = tipo === 'icmp' ? '0.0.0.0/0' : CidrEn[index].value;
                 let fromPort = 0;
                 let toPort = 0;
 
@@ -165,11 +186,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 outputContent += `
-<span class="amarillo">ingrees</span><span class="rosa">{</span> <br/>
-<span class="celeste">from_port</span> <span class="naranja">=</span> <span class="rojo">${fromPort}</span> <br/>
-<span class="celeste">to_port</span> <span class="naranja">=</span> <span class="rojo">${toPort}</span> <br/>
-<span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"${tipo}"</span> <br/>
-<span class="celeste">cidr_blocks</span> <span class="naranja">=</span> <span class="azul">[</span><span class="verde">"${cidr}"</span><span class="azul">]</span><br/>
+    <span class="amarillo">ingress</span><span class="rosa">{</span>
+        <span class="celeste">from_port</span> <span class="naranja">=</span> <span class="rojo">${fromPort}</span>
+        <span class="celeste">to_port</span> <span class="naranja">=</span> <span class="rojo">${toPort}</span>
+        <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">${tipo}</span>
+        <span class="celeste">cidr_blocks</span> <span class="naranja">=</span> <span class="azul">[</span><span class="verde">"${cidr}"</span><span class="azul">]</span>
+    <span class="rosa">}</span>
 `;
             });
 
@@ -177,8 +199,8 @@ document.addEventListener("DOMContentLoaded", function() {
             const CidrSa = document.querySelectorAll('.cidr.salida');
 
             TipoSa.forEach(function(tipoSelect, index) {
-                const tipo = tipoSelect.value;
-                const cidr = CidrSa[index].value;
+                const tipo = tipoSelect.value === 'icmp' ? 'icmp' : 'tcp';
+                const cidr = tipo === 'icmp' ? '0.0.0.0/0' : CidrSa[index].value;
                 let fromPort = 0;
                 let toPort = 0;
 
@@ -191,20 +213,21 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 outputContent += `
-<span class="amarillo">egrees</span><span class="rosa">{</span> <br/>
-<span class="celeste">from_port</span> <span class="naranja">=</span> <span class="rojo">${fromPort}</span> <br/>
-<span class="celeste">to_port</span> <span class="naranja">=</span> <span class="rojo">${toPort}</span> <br/>
-<span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"${tipo}"</span> <br/>
-<span class="celeste">cidr_blocks</span> <span class="naranja">=</span> <span class="azul">[</span><span class="verde">"${cidr}"</span><span class="azul">]</span><br/>
+    <span class="amarillo">egress</span><span class="rosa">{</span>
+        <span class="celeste">from_port</span> <span class="naranja">=</span> <span class="rojo">${fromPort}</span>
+        <span class="celeste">to_port</span> <span class="naranja">=</span> <span class="rojo">${toPort}</span>
+        <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">${tipo}</span>
+        <span class="celeste">cidr_blocks</span> <span class="naranja">=</span> <span class="azul">[</span><span class="verde">"${cidr}"</span><span class="azul">]</span>
+    <span class="rosa">}</span>
 `;
             });
 
             outputContent += `
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span><br/>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqNom}"</span><br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+    <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
+        <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqNom}"</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span>
+</pre>
             `;
 
             outputDiv.innerHTML = outputContent;
@@ -218,4 +241,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     limpiarFormulario();
     añadirValidacionCampos();
+
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });

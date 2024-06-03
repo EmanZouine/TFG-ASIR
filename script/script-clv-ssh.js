@@ -76,26 +76,29 @@ document.addEventListener("DOMContentLoaded", function() {
   
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Clave SSH ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "tls_private_key" "${nombre_clv}" <span class="amarillo">{</span> <br/>
-<span class="celeste">algorithm</span> <span class="naranja">=</span> <span class="verde">"RSA"</span> <br/>
-<span class="celeste">rsa_bits</span> <span class="naranja">=</span> <span class="rojo">2048</span> <br/>
-<span class="amarillo">}</span><br/><br/>
+<pre>
+<span class="morado">#Clave SSH ${index + 1}:</span> 
+<span class="amarillo">resource</span> "tls_private_key" "${nombre_clv}" <span class="amarillo">{</span> 
+    <span class="celeste">algorithm</span> <span class="naranja">=</span> <span class="verde">"RSA"</span> 
+    <span class="celeste">rsa_bits</span> <span class="naranja">=</span> <span class="rojo">2048</span> 
+<span class="amarillo">}</span>
 
-<span class="amarillo">resource</span> "local_file" "${nombre_clv}_file" <span class="amarillo">{</span> <br/>
-<span class="celeste">content</span> <span class="naranja">=</span> <span class="celeste">tls_private_key</span><span class="naranja">.</span>${nombre_clv}<span class="naranja">.</span>private_key_pem <br/>
-<span class="celeste">filename</span> <span class="naranja">=</span> <span class="verde">"${nomfich}.pem"</span> <br/>
-<span class="amarillo">}</span><br/><br/>
+<span class="amarillo">resource</span> "local_file" "${nombre_clv}_file" <span class="amarillo">{</span> 
+    <span class="celeste">content</span> <span class="naranja">=</span> <span class="celeste">tls_private_key</span><span class="naranja">.</span>${nombre_clv}<span class="naranja">.</span>private_key_pem 
+    <span class="celeste">filename</span> <span class="naranja">=</span> <span class="verde">"${nomfich}.pem"</span> 
+<span class="amarillo">}</span>
 
-<span class="amarillo">resource</span> "aws_key_pair" "${nombre_clv}" <span class="amarillo">{</span> <br/>
-<span class="celeste">key_name</span> <span class="naranja">=</span> <span class="verde">"${nombre_clv}"</span> <br/>
-<span class="celeste">public_key</span> <span class="naranja">=</span> <span class="celeste">tls_private_key</span><span class="naranja">.</span>${nombre_clv}<span class="naranja">.</span>public_key_openssh <br/>
-<span class="amarillo">}</span><br/><br/>
+<span class="amarillo">resource</span> "aws_key_pair" "${nombre_clv}" <span class="amarillo">{</span> 
+    <span class="celeste">key_name</span> <span class="naranja">=</span> <span class="verde">"${nombre_clv}"</span> 
+    <span class="celeste">public_key</span> <span class="naranja">=</span> <span class="celeste">tls_private_key</span><span class="naranja">.</span>${nombre_clv}<span class="naranja">.</span>public_key_openssh 
+<span class="amarillo">}</span><br/>
 
-</p>
+</pre>
                 `;
             });
         }
     });
+
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });

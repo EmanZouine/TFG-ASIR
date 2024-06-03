@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
                 <input type="text" class="ip_priv" placeholder="IP privada  |  Ej: 192.168.1.1" required>
   
-                <input type="text" class="grseg_nom" placeholder="Nombre del grupo de seguridad" required>
+                <input type="text" class="grseg_nom" placeholder="Nombre grupo seguridad   |  GS_1  GS_2" required>
   
                 <input type="text" class="etiq_nom" placeholder="Etiqueta nombre" required>
             </div>
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
   
         /*Valida que los campos no tengan carácteres que no sean números, letras o guión bajo*/
-        document.querySelectorAll('.nombre, .nombre_claves, .subred_nom, .grseg_nom').forEach(input => {
+        document.querySelectorAll('.nombre, .nombre_claves, .subred_nom').forEach(input => {
             input.addEventListener('input', function() {
                 if (!/^[a-zA-Z0-9_]*$/.test(input.value)) {
                     input.setCustomValidity('El campo solo puede contener letras, números y guiones bajos (_).');
@@ -72,6 +72,17 @@ document.addEventListener("DOMContentLoaded", function() {
             input.addEventListener('input', function() {
                 if (!/^[\d.]*$/.test(input.value)) {
                     input.setCustomValidity('La IP privada solo puede contener números y puntos (.)');
+                } else {
+                    input.setCustomValidity('');
+                }
+            });
+        });
+
+        /*Permite espacios en el campo de grupo de seguridad*/
+        document.querySelectorAll('.grseg_nom').forEach(input => {
+            input.addEventListener('input', function() {
+                if (!/^[a-zA-Z0-9_ ]*$/.test(input.value)) {
+                    input.setCustomValidity('El campo solo puede contener letras, números, guiones bajos (_) y espacios.');
                 } else {
                     input.setCustomValidity('');
                 }
@@ -133,28 +144,32 @@ document.addEventListener("DOMContentLoaded", function() {
                 const subnom = subredNom[index].value;
                 const ippub = ipPublica[index].checked;
                 const ipprv = ipPrivada[index].value;
-                const grpseg = grupoSeguridad[index].value;
+                const grpseg = grupoSeguridad[index].value.split(" ").map(gs => `aws_security_group.${gs}.id`).join(", ");
                 const etqnom = etiquetaNombre[index].value;
   
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Instancia ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_instance" "${nombre_ins}" <span class="amarillo">{</span> <br/>
-<span class="celeste">ami </span><span class="naranja">=</span> <span class="verde">"${sistema}"</span> <br/>
-<span class="celeste">instance_type</span> <span class="naranja">=</span> <span class="verde">"${tipoins}"</span> <br/>
-<span class="celeste">key_name</span> <span class="naranja">=</span> <span class="verde">"${nomclv}"</span> <br/>
-<span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${subnom}<span class="naranja">.</span>id <br/>
-<span class="celeste">associate_public_ip_address</span> <span class="naranja">=</span> <span class="rojo">${ippub}</span> <br/>
-<span class="celeste">private_ip</span> <span class="naranja">=</span> <span class="verde">"${ipprv}"</span> <br/>
-<span class="celeste">vpc_security_group_ids</span> <span class="naranja">=</span> <span class="rosa">[</span><span class="celeste">aws_security_group</span><span class="naranja">.</span>${grpseg}<span class="naranja">.</span>id<span class="rosa">]</span> <br/>
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span><br/>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span><br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<pre>
+<span class="morado">#Instancia ${index + 1}:</span> 
+<span class="amarillo">resource</span> "aws_instance" "${nombre_ins}" <span class="amarillo">{</span> 
+    <span class="celeste">ami </span><span class="naranja">=</span> <span class="verde">"${sistema}"</span> 
+    <span class="celeste">instance_type</span> <span class="naranja">=</span> <span class="verde">"${tipoins}"</span> 
+    <span class="celeste">key_name</span> <span class="naranja">=</span> <span class="verde">"${nomclv}"</span> 
+    <span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${subnom}<span class="naranja">.</span>id 
+    <span class="celeste">associate_public_ip_address</span> <span class="naranja">=</span> <span class="rojo">${ippub}</span> 
+    <span class="celeste">private_ip</span> <span class="naranja">=</span> <span class="verde">"${ipprv}"</span> 
+    <span class="celeste">vpc_security_group_ids</span> <span class="naranja">=</span> <span class="rosa">[</span>${grpseg}<span class="rosa">]</span> 
+
+    <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
+        <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span><br/>
+</pre>
                 `;
             });
         }
     });
+
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });

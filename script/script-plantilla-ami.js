@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
                 <input type="text" class="user_data" placeholder="Nombre del fichero user data" required>
   
-                <input type="text" class="grseg_nom" placeholder="Nombre del grupo de seguridad" required>
+                <input type="text" class="grseg_nom" placeholder="Nombre grupo seguridad  |  GS_1  GS_2" required>
   
                 <input type="text" class="etiq_nom" placeholder="Etiqueta nombre" required>
             </div>
@@ -54,6 +54,17 @@ document.addEventListener("DOMContentLoaded", function() {
             input.addEventListener('input', function() {
                 if (!/^[a-zA-Z0-9_]*$/.test(input.value)) {
                     input.setCustomValidity('El campo solo puede contener letras, números y guiones bajos (_).');
+                } else {
+                    input.setCustomValidity('');
+                }
+            });
+        });
+
+        /*Permite espacios en el campo de grupo de seguridad*/
+        document.querySelectorAll('.grseg_nom').forEach(input => {
+            input.addEventListener('input', function() {
+                if (!/^[a-zA-Z0-9_ ]*$/.test(input.value)) {
+                    input.setCustomValidity('El campo solo puede contener letras, números, guiones bajos (_) y espacios.');
                 } else {
                     input.setCustomValidity('');
                 }
@@ -111,32 +122,35 @@ document.addEventListener("DOMContentLoaded", function() {
                 const tipoplant = tipoPlant[index].value;
                 const nomclv = nombreClaves[index].value;
                 const userdata = userData[index].value;
-                const grpseg = grupoSeguridad[index].value;
+                const grpseg = grupoSeguridad[index].value.split(" ").map(gs => `aws_security_group.${gs}.id`).join(", ");
                 const etqnom = etiquetaNombre[index].value;
   
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Plantilla AMI ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_launch_template" "${nombre}" <span class="amarillo">{</span> <br/>
-<span class="celeste">name_prefix </span><span class="naranja">=</span> <span class="verde">"${nombre}"</span> <br/>
-<span class="celeste">image_id </span><span class="naranja">=</span> <span class="verde">"${sistema}"</span> <br/>
-<span class="celeste">instance_type</span> <span class="naranja">=</span> <span class="verde">"${tipoplant}"</span> <br/>
-<span class="celeste">key_name</span> <span class="naranja">=</span> <span class="verde">"${nomclv}"</span> <br/>
-<span class="celeste">user_data</span> <span class="naranja">= filebase64</span><span class="rosa">(</span><span class="verde">"${userdata}.sh"</span><span class="rosa">)</span> <br/>
-<span class="celeste">vpc_security_group_ids</span> <span class="naranja">=</span> <span class="rosa">[</span><span class="celeste">aws_security_group</span><span class="naranja">.</span>${grpseg}<span class="naranja">.</span>id<span class="rosa">]</span> <br/>
-<span class="amarillo">tag_specifications</span> <span class="rosa">{</span> <br/>
-<span class="celeste">resource_type  </span><span class="naranja">=</span> <span class="verde">"instance"</span> <br/>
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="azul">{</span> </br>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span> <br/>
-<span class="azul">}</span> </br>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<pre>
+<span class="morado">#Plantilla AMI ${index + 1}:</span> 
+<span class="amarillo">resource</span> "aws_launch_template" "${nombre}" <span class="amarillo">{</span> 
+    <span class="celeste">name_prefix </span><span class="naranja">=</span> <span class="verde">"${nombre}"</span> 
+    <span class="celeste">image_id </span><span class="naranja">=</span> <span class="verde">"${sistema}"</span> 
+    <span class="celeste">instance_type</span> <span class="naranja">=</span> <span class="verde">"${tipoplant}"</span> 
+    <span class="celeste">key_name</span> <span class="naranja">=</span> <span class="verde">"${nomclv}"</span> 
+    <span class="celeste">user_data</span> <span class="naranja">= filebase64</span><span class="rosa">(</span><span class="verde">"${userdata}.sh"</span><span class="rosa">)</span> 
+    <span class="celeste">vpc_security_group_ids</span> <span class="naranja">=</span> <span class="rosa">[</span>${grpseg}<span class="rosa">]</span> 
+
+    <span class="amarillo">tag_specifications</span> <span class="rosa">{</span> 
+        <span class="celeste">resource_type  </span><span class="naranja">=</span> <span class="verde">"instance"</span> 
+        <span class="celeste">tags</span> <span class="naranja">=</span> <span class="azul">{</span> </br>
+            <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span> 
+        <span class="azul">}</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span><br/>
+</pre>
                 `;
             });
         }
     });
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });
 
 

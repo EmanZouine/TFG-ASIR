@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Jost:ital,wght@0,100..900;1,100..900&family=M+PLUS+Rounded+1c&family=Questrial&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Jost:ital,wght@0,100..900;1,100..900&family=Questrial&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/style.css" />
-    <title>InfraQuick: Terraform y Ansible</title>
+    <title>InfraQuick: Terraform</title>
 </head>
 <body>
     <header>
@@ -22,6 +22,9 @@
 
         <div class="formulario_menu">
             <a href="../../index.html">Volver al inicio</a>
+
+            <a href="../terraform.html">Primeros pasos</a>
+            
             <div class="desplegable">
                 <p>EC2</p>
                 <div class="desplegable_opc">
@@ -74,7 +77,9 @@
                         <option value="8">8</option>
                         <option value="9">9</option>
                         <option value="10">10</option>
-                    </select> </br>
+                    </select>
+                    <div class="contenedor_rutas"></div>
+                    
                     <label for="cantidad-sub" class="nom_cant_sub">Cantidad subredes a asociar:</label>
                     <select id="cantidad-sub">
                         <option selected>- Selecciona -</option>
@@ -89,12 +94,13 @@
                         <option value="9">9</option>
                         <option value="10">10</option>
                     </select>
+                    <div class="contenedor_subredes"></div>
                 </div>
                 <button id="enviar_btn">Enviar</button>
             </div>
 
-            <div class="contenedor_rutas"></div>
-            <div class="contenedor_subredes"></div>
+            
+            
 
             <div class="cont_out">
                 <div class="copiar_btn">
@@ -111,7 +117,6 @@
     </main>
 
     <footer>
-        <a href="https://docs.ansible.com/ansible/latest/getting_started/introduction.html" target="_blank">Documentación Ansible</a>
         <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs" target="_blank">Documentación Terraform</a>
         <a href="https://docs.aws.amazon.com/es_es/" target="_blank">Documentación AWS</a>
     </footer>

@@ -11,9 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="formulario_individual">
                 <p class="num_form">Grupo de autoescalado ${i + 1}</p>
                 <input type="text" class="nombre" placeholder="Nombre del grupo de autoescalado" required>
-
-                <input type="text" class="subred_nom" placeholder="Nombre de la subred" required>
-  
+                <input type="text" class="subred_nom" placeholder="Nombre subredes  |  subred_1  subred_2" required>
                 <label for="des_cant">Cantidad de instancias deseada:</label>
                 <select class="des_cant">
                     <option selected>- Selecciona -</option>
@@ -28,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select>
-
                 <label for="max_cant">Cantidad máxima de instancias:</label>
                 <select class="max_cant">
                     <option selected>- Selecciona -</option>
@@ -43,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select>
-
                 <label for="min_cant">Cantidad mínima de instancias:</label>
                 <select class="min_cant">
                     <option selected>- Selecciona -</option>
@@ -58,9 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     <option value="9">9</option>
                     <option value="10">10</option>
                 </select>
-  
                 <input type="text" class="nombre_plantilla" placeholder="Nombre de la plantilla AMI" required>
-  
                 <input type="text" class="etiq_nom" placeholder="Etiqueta nombre" required>
             </div>
             `;
@@ -70,10 +64,21 @@ document.addEventListener("DOMContentLoaded", function() {
         }
   
         /*Valida que los campos no tengan carácteres que no sean números, letras o guión bajo*/
-        document.querySelectorAll('.nombre, .nombre_plantilla, .subred_nom').forEach(input => {
+        document.querySelectorAll('.nombre, .nombre_plantilla').forEach(input => {
             input.addEventListener('input', function() {
                 if (!/^[a-zA-Z0-9_]*$/.test(input.value)) {
                     input.setCustomValidity('El campo solo puede contener letras, números y guiones bajos (_).');
+                } else {
+                    input.setCustomValidity('');
+                }
+            });
+        });
+
+        /*Permite espacios en el campo de grupo de seguridad*/
+        document.querySelectorAll('.subred_nom').forEach(input => {
+            input.addEventListener('input', function() {
+                if (!/^[a-zA-Z0-9_ ]*$/.test(input.value)) {
+                    input.setCustomValidity('El campo solo puede contener letras, números, guiones bajos (_) y espacios.');
                 } else {
                     input.setCustomValidity('');
                 }
@@ -85,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
     cantidadForm.addEventListener('change', function() {
         /*Obtiene la cantidad seleccionada del desplegable*/
         const cantidad = parseInt(cantidadForm.value); 
-        /*Limpia las cajas de formualrios que estaban anteriormente*/
+        /*Limpia las cajas de formularios que estaban anteriormente*/
         document.querySelectorAll('.formulario_individual').forEach(caja => caja.remove());
         /*Limpia el contenedor de la salida del contenido*/
         document.querySelector('#output').innerHTML = '';
@@ -95,11 +100,11 @@ document.addEventListener("DOMContentLoaded", function() {
   
     /*Detecta si se cliquea en el botón enviar*/
     document.querySelector('#enviar_btn').addEventListener('click', function(event) {
-        /*Evita que se envie el formulario*/
+        /*Evita que se envíe el formulario*/
         event.preventDefault(); 
   
         const formFields = document.querySelectorAll('.formulario_individual input, .formulario_individual select');
-        /*Variable boleana que se encarga de la comprobación de los campos*/
+        /*Variable booleana que se encarga de la comprobación de los campos*/
         let allValid = true; 
   
         /*Validación de que los campos tienen buenos nombres*/
@@ -127,38 +132,41 @@ document.addEventListener("DOMContentLoaded", function() {
             /*Recoge los datos de cada formulario y los añade a una variable*/
             nombre.forEach(function(nombreFuncion, index) { 
                 const nombre_gat = nombreFuncion.value;
-                const subnom = subredNom[index].value;
+                const subnom = subredNom[index].value.split(" ").map(subred => `aws_subnet.${subred}.id`).join(", ");
                 const descan = cantDes[index].value;
-                const maxcan= cantMax[index].value;
+                const maxcan = cantMax[index].value;
                 const mincan = cantMin[index].value;
                 const nomplan = nomPlantilla[index].value;
                 const etqnom = etiquetaNombre[index].value;
   
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Grupo de autoescalado ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_autoscaling_group" "${nombre_gat}" <span class="amarillo">{</span> <br/>
-<span class="celeste">name </span><span class="naranja">=</span> <span class="verde">"${nombre_gat}"</span> <br/>
-<span class="celeste">vpc_zone_identifier</span> <span class="naranja">=</span> <span class="rosa">[</span><span class="celeste">aws_subnet</span><span class="naranja">.</span>${subnom}<span class="naranja">.</span>id<span class="rosa">]</span> <br/>
-<span class="celeste">desired_capacity</span> <span class="naranja">=</span> <span class="rojo">${descan}</span> <br/>
-<span class="celeste">max_size</span> <span class="naranja">=</span> <span class="rojo">${maxcan}</span> <br/>
-<span class="celeste">min_size</span> <span class="naranja">=</span> <span class="rojo">${mincan}</span> <br/>
-<span class="celeste">EC2</span> <span class="naranja">=</span> <span class="verde">"EC2"</span> <br/>
-<span class="amarillo">launch_template</span> <span class="rosa">{</span> <br/>
-<span class="celeste">id</span> <span class="naranja">=</span> <span class="celeste">aws_launch_template</span><span class="naranja">.</span>${nomplan}<span class="naranja">.</span>id <br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">tag</span> <span class="rosa">{</span> <br/>
-<span class="celeste">key </span><span class="naranja">=</span> <span class="verde">"Name"</span> <br/>
-<span class="celeste">value</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span> <br/>
-<span class="celeste">propagate_at_launch </span><span class="naranja">=</span> <span class="rojo">true</span> <br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<pre>
+<span class="morado">#Grupo de autoescalado ${index + 1}:</span> 
+<span class="amarillo">resource</span> "aws_autoscaling_group" "${nombre_gat}" <span class="amarillo">{</span> 
+    <span class="celeste">name </span><span class="naranja">=</span> <span class="verde">"${nombre_gat}"</span> 
+    <span class="celeste">vpc_zone_identifier</span> <span class="naranja">=</span> <span class="rosa">[</span>${subnom}<span class="rosa">]</span> 
+    <span class="celeste">desired_capacity</span> <span class="naranja">=</span> <span class="rojo">${descan}</span> 
+    <span class="celeste">max_size</span> <span class="naranja">=</span> <span class="rojo">${maxcan}</span> 
+    <span class="celeste">min_size</span> <span class="naranja">=</span> <span class="rojo">${mincan}</span> 
+    <span class="celeste">health_check_type</span> <span class="naranja">=</span> <span class="verde">"EC2"</span> 
+
+    <span class="amarillo">launch_template</span> <span class="rosa">{</span> 
+        <span class="celeste">id</span> <span class="naranja">=</span> <span class="celeste">aws_launch_template</span><span class="naranja">.</span>${nomplan}<span class="naranja">.</span>id 
+    <span class="rosa">}</span>
+
+    <span class="amarillo">tag</span> <span class="rosa">{</span> 
+        <span class="celeste">key </span><span class="naranja">=</span> <span class="verde">"Name"</span> 
+        <span class="celeste">value</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span> 
+        <span class="celeste">propagate_at_launch </span><span class="naranja">=</span> <span class="rojo">true</span> 
+    <span class="rosa">}</span>
+<span class="amarillo">}</span><br/>
+</pre>
                 `;
             });
         }
     });
+
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });
-
-

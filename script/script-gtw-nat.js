@@ -82,18 +82,21 @@ document.addEventListener("DOMContentLoaded", function() {
   
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Gateway NAT ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_nat_gateway" "${nombre_gtw}" <span class="amarillo">{</span> <br/>
-<span class="celeste">allocation_id</span> <span class="naranja">=</span> <span class="celeste">aws_eip</span><span class="naranja">.</span>${ipelasnom}<span class="naranja">.</span>id <br/>
-<span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${subnom}<span class="naranja">.</span>id <br/>
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span><br/>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span><br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<pre>
+<span class="morado">#Gateway NAT ${index + 1}:</span> 
+<span class="amarillo">resource</span> "aws_nat_gateway" "${nombre_gtw}" <span class="amarillo">{</span> 
+    <span class="celeste">allocation_id</span> <span class="naranja">=</span> <span class="celeste">aws_eip</span><span class="naranja">.</span>${ipelasnom}<span class="naranja">.</span>id 
+    <span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${subnom}<span class="naranja">.</span>id 
+
+    <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
+        <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span><br/>
+</pre>
                 `;
             });
         }
     });
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });

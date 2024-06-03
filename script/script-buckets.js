@@ -88,29 +88,34 @@ document.addEventListener("DOMContentLoaded", function() {
   
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Bucket ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_s3_bucket" "${nombre_buck}" <span class="amarillo">{</span> <br/>
-<span class="celeste">bucket</span> <span class="naranja">=</span> <span class="verde">"${nombre_buck}"</span> <br/>
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span><br/>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span><br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
+<pre>
+<span class="morado">#Bucket ${index + 1}:</span> 
+<span class="amarillo">resource</span> "aws_s3_bucket" "${nombre_buck}" <span class="amarillo">{</span> 
+    <span class="celeste">bucket</span> <span class="naranja">=</span> <span class="verde">"${nombre_buck}"</span> 
 
-<span class="amarillo">resource</span> "aws_s3_bucket_acl" "${nombre_buck}_acl" <span class="amarillo">{</span> <br/>
-<span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">aws_s3_bucket </span><span class="naranja">.</span>${nombre_buck}<span class="naranja">.</span>id <br/>
-<span class="celeste">acl</span> <span class="naranja">=</span> <span class="verde">"${tipoacl}"</span> <br/>
-<span class="amarillo">}</span><br/><br/>
+    <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
+        <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqnom}"</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span>
 
-<span class="amarillo">resource</span> "aws_s3_object" "${nombre_buck}_objects" <span class="amarillo">{</span> <br/>
-<span class="celeste">for_each</span> <span class="naranja">=</span> <span class="naranja">fileset</span><span class="rosa">(</span><span class="verde">"${nomdir}/"</span>, <span class="verde">"**/*"</span><span class="rosa">)</span> <br/>
-<span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">aws_s3_bucket</span><span class="naranja">.</span>${nombre_buck}<span class="naranja">.</span>id <br/>
-<span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">each</span><span class="naranja">.</span>value <br/>
-<span class="celeste">source</span> <span class="naranja">=</span> <span class="verde">"uploads/</span><span class="naranja">\$\{</span><span class="celeste">each</span><span class="naranja">.</span>value<span class="naranja">}</span><span class="verde">"</span> <br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<span class="amarillo">resource</span> "aws_s3_bucket_acl" "${nombre_buck}_acl" <span class="amarillo">{</span> 
+    <span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">aws_s3_bucket</span><span class="naranja">.</span>${nombre_buck}<span class="naranja">.</span>id 
+    <span class="celeste">acl</span> <span class="naranja">=</span> <span class="verde">"${tipoacl}"</span> 
+<span class="amarillo">}</span>
+
+<span class="amarillo">resource</span> "aws_s3_object" "${nombre_buck}_objects" <span class="amarillo">{</span> 
+    <span class="celeste">for_each</span> <span class="naranja">=</span> <span class="naranja">fileset</span><span class="rosa">(</span><span class="verde">"${nomdir}/"</span>, <span class="verde">"**/*"</span><span class="rosa">)</span> 
+    <span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">aws_s3_bucket</span><span class="naranja">.</span>${nombre_buck}<span class="naranja">.</span>id 
+    <span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">each</span><span class="naranja">.</span>value 
+    <span class="celeste">source</span> <span class="naranja">=</span> <span class="verde">"uploads/</span><span class="naranja">\$\{</span><span class="celeste">each</span><span class="naranja">.</span>value<span class="naranja">}</span><span class="verde">"</span> 
+<span class="amarillo">}</span></br>
+</pre>
                 `;
             });
         }
     });
+
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+
 });

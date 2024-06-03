@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     /* Función para añadir validación a los campos individuales */
     function añadirValidaciónIndividual() {
-        const campos = ['.nombre-lb', '.nombre-lb-tg', '.grp-seg', '.vpc', '.etq_nom', '.subred'];
+        const campos = ['.nombre-lb', '.nombre-lb-tg', '.vpc', '.etq_nom', '.subred', ".grp-seg"];
         campos.forEach(selector => {
             const input = document.querySelector(selector);
             if (input) {
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     let regex;
                     let mensajeError;
 
-                    if (selector === '.subred') {
+                    if (selector === '.subred' || selector === '.grp-seg'){
                         regex = /^[a-zA-Z0-9_, ]*$/;
                         mensajeError = 'El campo solo puede contener letras, números, guiones bajos (_), comas y espacios.';
                     } else {
@@ -58,6 +58,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             }
         });
+        
+
     }
 
     /* Detecta si el desplegable de cantidades ha sufrido algún cambio */
@@ -95,10 +97,9 @@ document.addEventListener("DOMContentLoaded", function() {
         if (allValid) {
             const nombreLb = document.querySelector('.nombre-lb').value;
             const nombreLbTg = document.querySelector('.nombre-lb-tg').value;
-            const intLb = document.querySelector('#intlb').checked; // Asegurarse de obtener el valor como booleano
-            const grpSeg = document.querySelector('.grp-seg').value;
-            const subredesInput = document.querySelector('.subred').value;
-            const subredes = subredesInput.split(' ').map(subred => `aws_subnet.${subred}.id`); // Formatear las subredes según lo solicitado
+            const intLb = document.querySelector('#intlb').checked;
+            const grpSeg = document.querySelector('.grp-seg').value.split(" ").map(gs => `aws_security_group.${gs}.id`).join(", ");
+            const subredes = document.querySelector('.subred').value.split(" ").map(subred => `aws_subnet.${subred}.id`).join(", ");
             const vpc = document.querySelector('.vpc').value;
             const etqNom = document.querySelector('.etq_nom').value;
 
@@ -107,41 +108,42 @@ document.addEventListener("DOMContentLoaded", function() {
 
             /* Añade la salida de los campos estáticos */
             outputDiv.innerHTML += `
-<p>
+<pre>
 
-<span class="morado">#Balanceador de carga:</span> <br/>
-<span class="amarillo">resource</span> "aws_lb" "${nombreLb}" <span class="amarillo">{</span> <br/>
-<span class="celeste">name </span><span class="naranja">=</span> <span class="verde">"${nombreLb}"</span> <br/>
-<span class="celeste">load_balancer_type</span> <span class="naranja">=</span> <span class="verde">"application"</span> <br/>
-<span class="celeste">internal</span> <span class="naranja">=</span> <span class="rojo">${intLb}</span> <br/>
-<span class="celeste">security_groups</span> <span class="naranja">=</span> <span class="rosa">[</span><span class="celeste">aws_security_group</span><span class="naranja">.</span>${grpSeg}<span class="naranja">.</span>id<span class="rosa">]</span> <br/>
-<span class="celeste">subnets</span> <span class="naranja">=</span> <span class="rosa">[</span>${subredes.join(', ')}<span class="rosa">]</span><br/>
-<span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span><br/>
-<span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqNom}"</span><br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
+<span class="morado">#Balanceador de carga:</span>
+<span class="amarillo">resource</span> "aws_lb" "${nombreLb}" <span class="amarillo">{</span>
+    <span class="celeste">name </span><span class="naranja">=</span> <span class="verde">"${nombreLb}"</span>
+    <span class="celeste">load_balancer_type</span> <span class="naranja">=</span> <span class="verde">"application"</span>
+    <span class="celeste">internal</span> <span class="naranja">=</span> <span class="rojo">${intLb}</span>
+    <span class="celeste">security_groups</span> <span class="naranja">=</span> <span class="rosa">[</span>${grpSeg}<span class="rosa">]</span>
+    <span class="celeste">subnets</span> <span class="naranja">=</span> <span class="rosa">[</span>${subredes}<span class="rosa">]</span>
 
-<span class="morado">#Target Group:</span> <br/>
-<span class="amarillo">resource</span> "aws_lb_target_group" "${nombreLbTg}" <span class="amarillo">{</span> <br/>
-<span class="celeste">name </span><span class="naranja">=</span> <span class="verde">"${nombreLbTg}"</span> <br/>
-<span class="celeste">port</span> <span class="naranja">=</span> <span class="rojo">80</span> <br/>
-<span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"HTTP"</span> <br/>
-<span class="celeste">target_type</span> <span class="naranja">=</span> <span class="verde">"instance"</span> <br/>
-<span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${vpc}<span class="naranja">.</span>id <br/>
-<span class="amarillo">}</span><br/><br/>
+    <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
+        <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqNom}"</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span>
 
-<span class="morado">#Listener del balanceador de carga:</span> <br/>
-<span class="amarillo">resource</span> "aws_lb_listener" "${nombreLb}_lstnr" <span class="amarillo">{</span> <br/>
-<span class="celeste">load_balancer_arn</span> <span class="naranja">=</span> <span class="celeste">aws_lb</span><span class="naranja">.</span>${nombreLb}<span class="naranja">.</span>arn <br/>
-<span class="celeste">port</span> <span class="naranja">=</span> <span class="rojo">80</span> <br/>
-<span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"HTTP"</span> <br/>
-<span class="amarillo">default_action</span> <span class="rosa">{</span> <br/>
-<span class="celeste">type </span><span class="naranja">=</span> <span class="verde">"forward"</span> <br/>
-<span class="celeste">target_group_arn</span> <span class="naranja">=</span> <span class="celeste">aws_lb_target_group</span><span class="naranja">.</span>${nombreLbTg}<span class="naranja">.</span>arn <br/>
-<span class="rosa">}</span><br/>
-<span class="amarillo">}</span><br/><br/>
+<span class="morado">#Target Group:</span>
+    <span class="amarillo">resource</span> "aws_lb_target_group" "${nombreLbTg}" <span class="amarillo">{</span>
+    <span class="celeste">name </span><span class="naranja">=</span> <span class="verde">"${nombreLbTg}"</span>
+    <span class="celeste">port</span> <span class="naranja">=</span> <span class="rojo">80</span>
+    <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"HTTP"</span>
+    <span class="celeste">target_type</span> <span class="naranja">=</span> <span class="verde">"instance"</span>
+    <span class="celeste">vpc_id</span> <span class="naranja">=</span> <span class="celeste">aws_vpc</span><span class="naranja">.</span>${vpc}<span class="naranja">.</span>id 
+<span class="amarillo">}</span>
 
-</p>
+<span class="morado">#Listener del balanceador de carga:</span>
+<span class="amarillo">resource</span> "aws_lb_listener" "${nombreLb}_lstnr" <span class="amarillo">{</span>
+    <span class="celeste">load_balancer_arn</span> <span class="naranja">=</span> <span class="celeste">aws_lb</span><span class="naranja">.</span>${nombreLb}<span class="naranja">.</span>arn
+    <span class="celeste">port</span> <span class="naranja">=</span> <span class="rojo">80</span>
+    <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"HTTP"</span>
+
+    <span class="amarillo">default_action</span> <span class="rosa">{</span>
+        <span class="celeste">type </span><span class="naranja">=</span> <span class="verde">"forward"</span>
+        <span class="celeste">target_group_arn</span> <span class="naranja">=</span> <span class="celeste">aws_lb_target_group</span><span class="naranja">.</span>${nombreLbTg}<span class="naranja">.</span>arn
+    <span class="rosa">}</span>
+<span class="amarillo">}</span>
+</pre>
             `;
 
             /* Recoge los datos de cada formulario dinámico y los añade a la salida */
@@ -149,14 +151,14 @@ document.addEventListener("DOMContentLoaded", function() {
             nombres.forEach(function(nombreFuncion, index) {
                 const nombreIns = nombreFuncion.value;
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#Instancia ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_lb_target_group_attachment" "${nombreIns}" <span class="amarillo">{</span> <br/>
-<span class="celeste">target_group_arn</span> <span class="naranja">=</span> <span class="celeste">aws_lb_target_group</span><span class="naranja">.</span>${nombreLbTg}<span class="naranja">.</span>arn <br/>
-<span class="celeste">target_id</span> <span class="naranja">=</span> <span class="celeste">aws_instance</span><span class="naranja">.</span>${nombreIns}<span class="naranja">.</span>id <br/>
-<span class="celeste">port</span> <span class="naranja">=</span> <span class="rojo">80</span> <br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<pre>
+<span class="morado">#Instancia ${index + 1}:</span>
+    <span class="amarillo">resource</span> "aws_lb_target_group_attachment" "${nombreLbTg}_${nombreIns}_attach" <span class="amarillo">{</span>
+    <span class="celeste">target_group_arn</span> <span class="naranja">=</span> <span class="celeste">aws_lb_target_group</span><span class="naranja">.</span>${nombreLbTg}<span class="naranja">.</span>arn
+    <span class="celeste">target_id</span> <span class="naranja">=</span> <span class="celeste">aws_instance</span><span class="naranja">.</span>${nombreIns}<span class="naranja">.</span>id
+    <span class="celeste">port</span> <span class="naranja">=</span> <span class="rojo">80</span>
+<span class="amarillo">}</span></br>
+</pre>
                 `;
             });
         }

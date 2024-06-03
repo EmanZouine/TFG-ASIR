@@ -4,74 +4,182 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=M+PLUS+Rounded+1c&family=Questrial&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Jost:ital,wght@0,100..900;1,100..900&family=Questrial&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css" />
-    <title>InfraQuick: Terraform y Ansible</title>
+    <title>InfraQuick: Terraform</title>
 </head>
-    <body>
 
-        <header>
-            <div class="formulario_fondo"></div>
-            <div class="formulario_titulo_texto">
-                <p class="formulario_titulo">InfraQuick</p>
-            </div>
-        </header>
+<body>
 
-        <main>
-            <p class="formulario_subtitulo">Terraform</p>
+    <header>
+        <div class="formulario_fondo"></div>
+        <div class="formulario_titulo_texto">
+            <p class="formulario_titulo">InfraQuick</p>
+        </div>
+    </header>
 
-            <div class="formulario_menu">
-                
-                <a href="../index.html">Volver al inicio</a>
+    <main>
+        <p class="formulario_subtitulo">Terraform</p>
 
-                <div class="desplegable">
-                    <p>EC2</p>
-                    <div class="desplegable_opc">
-                        <a href="terraform/instancias.html">Instancia</a>
-                        <a href="terraform/ip-elas.html">Direcciones IP elásticas</a>
-                        <a href="terraform/grp-seg.html">Grupos de seguridad</a>
-                        <a href="terraform/balan-carga.html">Balanceador de carga</a>
-                        <a href="terraform/plantilla-ami.html">Plantilla AMI</a>
-                        <a href="terraform/grp-autoesc.html">Grupos de autoescalado</a>
-                        <a href="terraform/clv-ssh.html">Creación de claves</a>
-                    </div>
+        <div class="formulario_menu">
+
+            <a href="../index.html">Volver al inicio</a>
+
+            <a href="#">Primeros pasos</a>
+
+            <div class="desplegable">
+                <p>EC2</p>
+                <div class="desplegable_opc">
+                    <a href="terraform/instancias.html">Instancia</a>
+                    <a href="terraform/ip-elas.html">Direcciones IP elásticas</a>
+                    <a href="terraform/grp-seg.html">Grupos de seguridad</a>
+                    <a href="terraform/balan-carga.html">Balanceador de carga</a>
+                    <a href="terraform/plantilla-ami.html">Plantilla AMI</a>
+                    <a href="terraform/grp-autoesc.html">Grupos de autoescalado</a>
+                    <a href="terraform/clv-ssh.html">Creación de claves</a>
                 </div>
-                
-                <div class="desplegable">
-                    <p>VPC</p>
-                    <div class="desplegable_opc">
-                        <a href="terraform/vpc.html">VPC</a>
-                        <a href="terraform/subred.html">Subredes</a>
-                        <a href="terraform/tbl-enru.html">Tabla de enrutamiento</a>
-                        <a href="terraform/gtw-int.html">Gateway a Internet</a>
-                        <a href="terraform/gtw-nat.html">Gateway NAT</a>
-                    </div>
-                </div>
-
-                <div class="desplegable">
-                    <p>S3</p>
-                    <div class="desplegable_opc">
-                        <a href="terraform/buckets.html">Buckets</a>
-                    </div>
-                </div>
-
             </div>
 
-            <div class="contenedor_formulario">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Qui sequi, dolor molestiae iste officiis exercitationem ab
-                vel asperiores, necessitatibus magnam, perspiciatis aliquam sit. Nemo modi nesciunt est excepturi exercitationem
-                ipsa.
+            <div class="desplegable">
+                <p>VPC</p>
+                <div class="desplegable_opc">
+                    <a href="terraform/vpc.html">VPC</a>
+                    <a href="terraform/subred.html">Subredes</a>
+                    <a href="terraform/tbl-enru.html">Tabla de enrutamiento</a>
+                    <a href="terraform/gtw-int.html">Gateway a Internet</a>
+                    <a href="terraform/gtw-nat.html">Gateway NAT</a>
+                </div>
             </div>
 
-        </main>
+            <div class="desplegable">
+                <p>S3</p>
+                <div class="desplegable_opc">
+                    <a href="terraform/buckets.html">Buckets</a>
+                </div>
+            </div>
 
-        <footer>
-            <a href="https://docs.ansible.com/ansible/latest/getting_started/introduction.html" target="_blank">Documentación Ansible</a>
-            <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs" target="_blank">Documentación Terraform</a>
-            <a href="https://docs.aws.amazon.com/es_es/" target="_blank">Documentación AWS</a>
-        </footer>
+        </div>
 
-    </body>
+        <div class="contenedor_formulario_primpasos">
+
+            <p id="titulo_primpaso">Primeros pasos en Terraform AWS </p>
+            <div>
+                <h2>1. Modificar AWS credentials</h2>
+                <p>
+                    Para utilizar Terraform con AWS, es esencial configurar adecuadamente las credenciales de AWS. Esto se
+                    puede hacer de varias maneras, pero la más común es a través del archivo de configuración que se guarda
+                    en tu directorio de usuario "~/.aws/credentials". Para modificarlo con las credenciales adecuadas una
+                    vez
+                    iniciado el laboratorio de AWS pinchas en "AWS Details" y si le das a "AWS Cli" te saldrá el siguiente
+                    código que tendrás que copiar y pegar en tu fichero porque sino terraform no podrá hacer conexión con tu
+                    laboratorio de AWS:
+                </p>
+                <div class="pre-container">
+                    <pre id="pre1">
+[default]
+aws_access_key_id=<span class="rojo">TU_ACCESS_KEY_ID</span>
+aws_secret_access_key=<span class="rojo">TU_SECRET_ACCESS_KEY_ID</span>
+aws_session_token=<span class="rojo">TU_SESSION_TOKEN_KEY_ID</span></pre>
+                    <button class="copy-button" onclick="copyToClipboard('pre1')">
+                        <img src="../img/copy_icon.png" alt="Copiar">
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <h2>2. Empezar un fichero Terraform</h2>
+                <p>
+                    Para empezar un proyecto en Terraform, necesitas crear un archivo de configuración principal que normalmente
+                    se llama "main.tf". Lo primero que tendrás que hacer es definir el proveedor del que harás uso, en este caso AWS,
+                    y además describir la región en la que esta funcionando tu laboratorio, si esté apartado no lo indicas correctamente
+                    a la hora de iniciar el terraform no te dejará crear nada, este es un ejemplo del inicio del fichero:
+                </p>
+                <div class="pre-container">
+                    <pre id="pre2">
+<span class="amarillo">terraform {</span>
+    <span class="amarillo">required_providers</span> <span class="rosa">{</span>
+        <span class="celeste">aws</span> <span class="naranja">=</span> <span class="azul">{</span>
+            <span class="celeste">source</span>  <span class="naranja">=</span> <span class="verde">"hashicorp/aws"</span>
+            <span class="celeste">version</span> <span class="naranja">=</span> <span class="verde">"~> 5.0"</span>
+        <span class="azul">}</span>
+    <span class="rosa">}</span>
+<span class="amarillo">}</span>
+
+<span class="amarillo">provider</span> "aws" <span class="amarillo">{</span>
+    <span class="celeste">region</span> <span class="naranja">=</span> <span class="verde">"us-east-1"</span>
+<span class="amarillo">}</span></pre>
+                    <button class="copy-button" onclick="copyToClipboard('pre2')">
+                        <img src="../img/copy_icon.png" alt="Copiar">
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <h2>3. Comandos básicos en Terraform y su uso básico</h2>
+                <p>
+                Terraform tiene varios comandos de los que se ha de hacer uso para gestionar la infraestructura, entre 
+                ellos los siguientes:
+
+                Este comando lo que hace es inicializar el entorno de trabajo descargando los plugins necesarios para 
+                el proveedor especificado
+
+                </p>
+                <div class="pre-container">
+                    <pre id="pre3">terraform init</pre>
+                    <button class="copy-button" onclick="copyToClipboard('pre3')">
+                        <img src="../img/copy_icon.png" alt="Copiar">
+                    </button>
+                </div>
+
+                <p>
+                    El siguiente lo que hace es generar y mostrar un plan de ejecución que detalla las acciones que 
+                    se harán cuando lances la configuración para que se cree
+                </p>
+                <div class="pre-container">
+                    <pre id="pre4">terraform plan</pre>
+                    <button class="copy-button" onclick="copyToClipboard('pre4')">
+                        <img src="../img/copy_icon.png" alt="Copiar">
+                    </button>
+                </div>
+
+                <p>
+                    Aplica la configuración de la infraestructura que has realizado en el script o las modificaciones
+                    que has hecho siguiendo el plan del comando anterior
+                </p>
+                <div class="pre-container">
+                    <pre id="pre5">terraform apply</pre>
+                    <button class="copy-button" onclick="copyToClipboard('pre5')">
+                        <img src="../img/copy_icon.png" alt="Copiar">
+                    </button>
+                </div>
+
+                <p>
+                    Destruye todos los recursos que has creado o modificado en el script
+                </p>
+                <div class="pre-container">
+                    <pre id="pre6">terraform destroy</pre>
+                    <button class="copy-button" onclick="copyToClipboard('pre6')">
+                        <img src="../img/copy_icon.png" alt="Copiar">
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        
+        <script src="../script/script-copiar-terraform.js"></script>
+        <div class="mensaje" id="mensaje">¡Código copiado!</div>
+
+    </main>
+
+    <footer>
+        <a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs" target="_blank">Documentación
+            Terraform</a>
+        <a href="https://docs.aws.amazon.com/es_es/" target="_blank">Documentación AWS</a>
+    </footer>
+
+
+</body>
+
 </html>

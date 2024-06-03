@@ -72,13 +72,15 @@ document.addEventListener("DOMContentLoaded", function() {
                 const nombre_ipelas = nombreFuncion.value;
                 /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
                 outputDiv.innerHTML += `
-<p>
-<span class="morado">#IP elástica ${index + 1}:</span> <br/>
-<span class="amarillo">resource</span> "aws_eip" "${nombre_ipelas}" <span class="amarillo">{</span> <br/>
-<span class="amarillo">}</span><br/><br/>
-</p>
+<pre>
+<span class="morado">#IP elástica ${index + 1}:</span>
+<span class="amarillo">resource</span> "aws_eip" "${nombre_ipelas}" <span class="amarillo">{</span>
+<span class="amarillo">}</span><br/>
+</pre>
                 `;
             });
         }
     });
+    /* Limpiar los campos del formulario al cargar la página */
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
 });
