@@ -11,12 +11,6 @@ document.addEventListener("DOMContentLoaded", function() {
             <div class="formulario_individual">
                 <p class="num_form">Bucket ${i + 1}</p>
                 <input type="text" class="nombre" placeholder="Nombre del bucket" required>
-                <label for="tipo_acl">ACL:</label>
-                <select class="tipo_acl" required>
-                    <option value="" selected>- Selecciona -</option>
-                    <option value="private">Privado</option>
-                    <option value="public-read">Público</option>
-                </select>
                 <input type="text" class="nom_dir" placeholder="Nombre del directorio donde están tus ficheros" required>
                 <input type="text" class="etiq_nom" placeholder="Etiqueta nombre" required>
             </div>
@@ -27,10 +21,21 @@ document.addEventListener("DOMContentLoaded", function() {
         }
   
         /*Valida que los campos no tengan carácteres que no sean números, letras o guión bajo*/
-        document.querySelectorAll('.nombre, .nom_dir').forEach(input => {
+        document.querySelectorAll('.nom_dir').forEach(input => {
             input.addEventListener('input', function() {
                 if (!/^[a-zA-Z0-9_]*$/.test(input.value)) {
                     input.setCustomValidity('El campo solo puede contener letras, números y guiones bajos (_).');
+                } else {
+                    input.setCustomValidity('');
+                }
+            });
+        });
+
+        /*Valida que el nombre tenga solo numeros y letras en minúscula*/
+        document.querySelectorAll('.nombre').forEach(input => {
+            input.addEventListener('input', function() {
+                if (!/^[a-z0-9]*$/.test(input.value)) {
+                    input.setCustomValidity('El campo solo puede contener letras minúsculas y números.');
                 } else {
                     input.setCustomValidity('');
                 }
@@ -42,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
     cantidadForm.addEventListener('change', function() {
         /*Obtiene la cantidad seleccionada del desplegable*/
         const cantidad = parseInt(cantidadForm.value); 
-        /*Limpia las cajas de formualrios que estaban anteriormente*/
+        /*Limpia las cajas de formularios que estaban anteriormente*/
         document.querySelectorAll('.formulario_individual').forEach(caja => caja.remove());
         /*Limpia el contenedor de la salida del contenido*/
         document.querySelector('#output').innerHTML = '';
@@ -72,7 +77,6 @@ document.addEventListener("DOMContentLoaded", function() {
         /*Si todos los campos son válidos se ejecuta lo siguiente*/
         if (allValid) { 
             const nombre = document.querySelectorAll('.nombre');
-            const tipodeacl = document.querySelectorAll('.tipo_acl');
             const nombredirectorio = document.querySelectorAll('.nom_dir');
             const etiquetaNombre = document.querySelectorAll('.etiq_nom');
 
@@ -82,7 +86,6 @@ document.addEventListener("DOMContentLoaded", function() {
             /*Recoge los datos de cada formulario y los añade a una variable*/
             nombre.forEach(function(nombreFuncion, index) { 
                 const nombre_buck = nombreFuncion.value;
-                const tipoacl = tipodeacl[index].value;
                 const nomdir = nombredirectorio[index].value;
                 const etqnom = etiquetaNombre[index].value;
   
@@ -98,16 +101,11 @@ document.addEventListener("DOMContentLoaded", function() {
     <span class="rosa">}</span>
 <span class="amarillo">}</span>
 
-<span class="amarillo">resource</span> "aws_s3_bucket_acl" "${nombre_buck}_acl" <span class="amarillo">{</span> 
-    <span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">aws_s3_bucket</span><span class="naranja">.</span>${nombre_buck}<span class="naranja">.</span>id 
-    <span class="celeste">acl</span> <span class="naranja">=</span> <span class="verde">"${tipoacl}"</span> 
-<span class="amarillo">}</span>
-
 <span class="amarillo">resource</span> "aws_s3_object" "${nombre_buck}_objects" <span class="amarillo">{</span> 
     <span class="celeste">for_each</span> <span class="naranja">=</span> <span class="naranja">fileset</span><span class="rosa">(</span><span class="verde">"${nomdir}/"</span>, <span class="verde">"**/*"</span><span class="rosa">)</span> 
     <span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">aws_s3_bucket</span><span class="naranja">.</span>${nombre_buck}<span class="naranja">.</span>id 
-    <span class="celeste">bucket</span> <span class="naranja">=</span> <span class="celeste">each</span><span class="naranja">.</span>value 
-    <span class="celeste">source</span> <span class="naranja">=</span> <span class="verde">"uploads/</span><span class="naranja">\$\{</span><span class="celeste">each</span><span class="naranja">.</span>value<span class="naranja">}</span><span class="verde">"</span> 
+    <span class="celeste">key</span> <span class="naranja">=</span> <span class="celeste">each</span><span class="naranja">.</span>value 
+    <span class="celeste">source</span> <span class="naranja">=</span> <span class="verde">"${nomdir}/</span><span class="naranja">\$\{</span><span class="celeste">each</span><span class="naranja">.</span>value<span class="naranja">}</span><span class="verde">"</span> 
 <span class="amarillo">}</span></br>
 </pre>
                 `;

@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const formContainer = document.querySelector('.contenedor_formulario');
-    const cantidadFormEn = document.querySelector('#cantidad-en');
-    const cantidadFormSa = document.querySelector('#cantidad-sa');
-    const formulariosEntrada = document.querySelector('#formularios-entrada');
-    const formulariosSalida = document.querySelector('#formularios-salida');
-    const outputDiv = document.querySelector('#output');
+    const formContainer = document.querySelector('.contenedor_formulario'); /*Contenedor donde se añadiran los formularios generados*/
+    const cantidadFormEn = document.querySelector('#cantidad-en'); /*Desplegable de cantidad elegida de reglas de entrada*/
+    const cantidadFormSa = document.querySelector('#cantidad-sa'); /*Desplegable de cantidad elegida de reglas de salida*/
+    const formulariosEntrada = document.querySelector('#formularios-entrada'); /*Contenedor de reglas de entrada donde se añadiran los formularios generados*/
+    const formulariosSalida = document.querySelector('#formularios-salida'); /*Contenedor de reglas de salida donde se añadiran los formularios generados*/
+    const outputDiv = document.querySelector('#output'); /*Contenedor donde se añade la salida de código generada*/
 
+    /* Mapeo de puertos para diferentes tipos de tráfico */
     const portMappings = {
         "http": { from: 80, to: 80 },
         "https": { from: 443, to: 443 },
@@ -19,10 +20,12 @@ document.addEventListener("DOMContentLoaded", function() {
         "ftp": { from: 21, to: 21 },
     };
 
+    /*Función para crear las cajas del formulario para las reglas*/
     function crearCajaFormulario(tipo, cantidad) {
         const formularioContainer = tipo === 'entrada' ? formulariosEntrada : formulariosSalida;
         formularioContainer.innerHTML = '';
 
+        /*Bucle para crear las cajas de formulario según la cantidad que se ha elegido*/
         for (let i = 0; i < cantidad; i++) {
             const formularioHTML = `
             <div class="formulario_individual">
@@ -48,9 +51,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 </div>
             </div>
             `;
+
+            /*Inserta el formulario generado antes del formulario HMTL*/
             formularioContainer.insertAdjacentHTML('beforeend', formularioHTML);
         }
 
+        /*Valida que el CIDR no tenga carácteres que no sean números, puntos o barras*/
         document.querySelectorAll('.cidr').forEach(input => {
             input.addEventListener('input', function() {
                 const regex = /^[\d./]*$/;
@@ -62,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
 
+        /* Configura el comportamiento de los campos según el tipo de tráfico seleccionado */
         document.querySelectorAll(`.tipo.${tipo}`).forEach(select => {
             select.addEventListener('change', function() {
                 const selectedValue = select.value;
@@ -114,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    /*Valida que los campos no tengan carácteres que no sean números, letras o guión bajo*/
     function añadirValidacionCampos() {
         const nombreInput = document.querySelector('.nombre');
         const vpcInput = document.querySelector('.vpc');
@@ -131,22 +139,26 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    /* Maneja el cambio en la cantidad de formularios de entrada */
     cantidadFormEn.addEventListener('change', function() {
         const cantidad = parseInt(cantidadFormEn.value);
         crearCajaFormulario('entrada', cantidad);
     });
 
+    /* Maneja el cambio en la cantidad de formularios de salida*/
     cantidadFormSa.addEventListener('change', function() {
         const cantidad = parseInt(cantidadFormSa.value);
         crearCajaFormulario('salida', cantidad);
     });
 
+    /* Maneja el envío del formulario */
     document.querySelector('#enviar_btn').addEventListener('click', function(event) {
         event.preventDefault();
 
         const formFields = document.querySelectorAll('.form_est input, .formulario_individual input, .formulario_individual select');
         let allValid = true;
 
+        /* Valida todos los campos del formulario */
         formFields.forEach(field => {
             if (!field.checkValidity()) {
                 allValid = false;
@@ -160,8 +172,10 @@ document.addEventListener("DOMContentLoaded", function() {
             const Vpc = document.querySelector('.vpc').value;
             const etqNom = document.querySelector('.etq_nom').value;
 
+            /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
             let outputContent = `
 <pre>
+<span class="morado">#Grupo de seguridad:</span> 
 <span class="amarillo">resource</span> "aws_security_group" "${nombreGs}" <span class="amarillo">{</span>
     <span class="celeste">name</span> <span class="naranja">=</span> <span class="verde">"${nombreGs}"</span>
     <span class="celeste">description</span> <span class="naranja">=</span> <span class="verde">"${descripcion}"</span>
@@ -171,6 +185,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const TipoEn = document.querySelectorAll('.tipo.entrada');
             const CidrEn = document.querySelectorAll('.cidr.entrada');
 
+            /* Genera las reglas de entrada (ingress) */
             TipoEn.forEach(function(tipoSelect, index) {
                 const tipo = tipoSelect.value === 'icmp' ? 'icmp' : 'tcp';
                 const cidr = tipo === 'icmp' ? '0.0.0.0/0' : CidrEn[index].value;
@@ -189,7 +204,7 @@ document.addEventListener("DOMContentLoaded", function() {
     <span class="amarillo">ingress</span><span class="rosa">{</span>
         <span class="celeste">from_port</span> <span class="naranja">=</span> <span class="rojo">${fromPort}</span>
         <span class="celeste">to_port</span> <span class="naranja">=</span> <span class="rojo">${toPort}</span>
-        <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">${tipo}</span>
+        <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"${tipo}"</span>
         <span class="celeste">cidr_blocks</span> <span class="naranja">=</span> <span class="azul">[</span><span class="verde">"${cidr}"</span><span class="azul">]</span>
     <span class="rosa">}</span>
 `;
@@ -198,6 +213,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const TipoSa = document.querySelectorAll('.tipo.salida');
             const CidrSa = document.querySelectorAll('.cidr.salida');
 
+            /* Genera las reglas de salida (egress) */
             TipoSa.forEach(function(tipoSelect, index) {
                 const tipo = tipoSelect.value === 'icmp' ? 'icmp' : 'tcp';
                 const cidr = tipo === 'icmp' ? '0.0.0.0/0' : CidrSa[index].value;
@@ -216,12 +232,13 @@ document.addEventListener("DOMContentLoaded", function() {
     <span class="amarillo">egress</span><span class="rosa">{</span>
         <span class="celeste">from_port</span> <span class="naranja">=</span> <span class="rojo">${fromPort}</span>
         <span class="celeste">to_port</span> <span class="naranja">=</span> <span class="rojo">${toPort}</span>
-        <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">${tipo}</span>
+        <span class="celeste">protocol</span> <span class="naranja">=</span> <span class="verde">"${tipo}"</span>
         <span class="celeste">cidr_blocks</span> <span class="naranja">=</span> <span class="azul">[</span><span class="verde">"${cidr}"</span><span class="azul">]</span>
     <span class="rosa">}</span>
 `;
             });
 
+            /* Añade las etiquetas al grupo de seguridad */
             outputContent += `
     <span class="celeste">tags</span> <span class="naranja">=</span> <span class="rosa">{</span>
         <span class="celeste">Name</span> <span class="naranja">=</span> <span class="verde">"${etqNom}"</span>
@@ -234,6 +251,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    /* Función para limpiar el formulario */
     function limpiarFormulario() {
         document.querySelectorAll('input').forEach(input => input.value = '');
         document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);

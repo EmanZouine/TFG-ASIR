@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
     const rutasContainer = document.createElement('div'); // Contenedor dinámico para las rutas
     const subredesContainer = document.createElement('div'); // Contenedor dinámico para las subredes
-    const cantidadForm = document.querySelector('#cantidad');
-    const cantidadSubForm = document.querySelector('#cantidad-sub');
-    const outputDiv = document.querySelector('#output');
+    const cantidadForm = document.querySelector('#cantidad'); /*Desplegable de cantidad elegida de rutas*/
+    const cantidadSubForm = document.querySelector('#cantidad-sub'); /*Desplegable de cantidad elegida de subredes a asociar*/
+    const outputDiv = document.querySelector('#output'); /*Contenedor donde se añade la salida de código generada*/
     const enviarBtn = document.querySelector('#enviar_btn');
 
     // Insertar los contenedores dinámicos debajo de sus respectivos selectores
@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", function() {
     cantidadSubForm.insertAdjacentElement('afterend', subredesContainer);
 
     function crearFormularioRutas(cantidad) {
-        rutasContainer.innerHTML = ''; // Limpia el contenedor
+        /*Limpia el contenedor de los formularios*/
+        rutasContainer.innerHTML = '';
         for (let i = 0; i < cantidad; i++) {
             const formularioRutaHTML = `
                 <div class="formulario_individual">
@@ -36,7 +37,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function crearFormularioSubredes(cantidad) {
-        subredesContainer.innerHTML = ''; // Limpia el contenedor
+        /*Limpia el contenedor de los formularios*/
+        subredesContainer.innerHTML = '';
         for (let i = 0; i < cantidad; i++) {
             const formularioSubredHTML = `
                 <div class="formulario_individual">
@@ -79,6 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const rutas = rutasContainer.querySelectorAll('.formulario_individual');
             const subredes = subredesContainer.querySelectorAll('.formulario_individual');
 
+            /*Se genera y añade al contenedor de la salida el código de terraform con las variables seleccionadas antes*/
             outputDiv.innerHTML = `
 <pre>
 <span class="morado">#Tabla de ruteo:</span> 
@@ -92,8 +95,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 const cidr = ruta.querySelector('.cidr').value;
                 let tipoId = tipo
 
+                /* Cambia a "internet_gateway" para Internet gateway */
                 if (tipo === "gateway") {
-                    tipoId = "internet_gateway"; // Cambia a "gateway_id" para Internet gateway
+                    tipoId = "internet_gateway"; 
                 }
 
                 outputDiv.innerHTML += `
@@ -122,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <pre>
 <span class="morado">#Asociacion a subred ${nombreSubred}:</span> 
 <span class="amarillo">resource</span> "aws_route_table_association" "${nombreTbl}_${nombreSubred}_association" <span class="amarillo">{</span> 
-    <span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${nombreSubred}<span class="naranja">.</span>arn 
+    <span class="celeste">subnet_id</span> <span class="naranja">=</span> <span class="celeste">aws_subnet</span><span class="naranja">.</span>${nombreSubred}<span class="naranja">.</span>id 
     <span class="celeste">route_table_id</span> <span class="naranja">=</span> <span class="celeste">aws_route_table</span><span class="naranja">.</span>${nombreTbl}<span class="naranja">.</span>id 
 <span class="amarillo">}</span><br/>
 </pre>
@@ -131,9 +135,9 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // Añadir validación a los campos
+    /*Valida que los campos no tengan carácteres que no sean números, letras o guión bajo*/
     function añadirValidacionCampos() {
-        document.querySelectorAll('.nombre').forEach(input => {
+        document.querySelectorAll('.nombre, .nombre-subred').forEach(input => {
             input.addEventListener('input', function() {
                 if (!/^[a-zA-Z0-9_]*$/.test(input.value)) {
                     input.setCustomValidity('El campo solo puede contener letras, números y guiones bajos (_).');
@@ -144,6 +148,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         });
 
+        /*Valida que el CIDR no tenga carácteres que no sean números, puntos o barras*/
         document.querySelectorAll('.cidr').forEach(input => {
             input.addEventListener('input', function() {
                 const regex = /^[\d./]*$/;
@@ -154,22 +159,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
             });
         });
-
-        document.querySelectorAll('.nombre-subred').forEach(input => {
-            input.addEventListener('input', function() {
-                if (!/^[a-zA-Z0-9_]*$/.test(input.value)) {
-                    input.setCustomValidity('El campo solo puede contener letras, números y guiones bajos (_).');
-                    input.reportValidity();
-                } else {
-                    input.setCustomValidity('');
-                }
-            });
-        });
     }
 
-    // Inicializa la validación de los campos existentes
+    /*Valida que los campos no tengan carácteres que no sean números, letras o guión bajo*/
     function añadirValidacionIndividual() {
-        const campos = ['.nombre-tbl', '.vpc', '.etq_nom'];
+        const campos = ['.nombre-tbl', '.vpc'];
         campos.forEach(selector => {
             const input = document.querySelector(selector);
             if (input) {
@@ -190,7 +184,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     añadirValidacionIndividual();
 
-    // Limpiar los campos del formulario al cargar la página
+    /* Limpiar los campos del formulario al cargar la página */
     function limpiarFormulario() {
         document.querySelectorAll('input').forEach(input => input.value = '');
         document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);

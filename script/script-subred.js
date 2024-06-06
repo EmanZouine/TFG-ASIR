@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <input type="text" class="nombre" placeholder="Nombre de la subred" required>
                 <input type="text" class="vpc_nom" placeholder="Nombre de la VPC" required>
                 <input type="text" class="cidr" placeholder="Bloque CIDR  |  Ej: 192.168.10.0/24" required>
-                <label for="avai_zone">Tipo de instancia:</label>
+                <label for="avai_zone">Zona de disponibilidad:</label>
                 <select class="avai_zone" required>
                   <option value="" selected>- Selecciona -</option>
                   <option value="us-east-1a">us east 1a</option>

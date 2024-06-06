@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
             enviarBtn.insertAdjacentHTML('beforebegin', formularioHTML);
         }
 
-        /* Añadir validación a los nuevos campos creados */
+        /* Añadir validación al nombre, que solo permita letras números y guiones bajos*/
         document.querySelectorAll('.nombre').forEach(input => {
             input.addEventListener('input', function() {
                 if (!/^[a-zA-Z0-9_]*$/.test(input.value)) {
@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    /* Función para añadir validación a los campos individuales */
+    /* Función para añadir validación a los campos individuales según su propio nombre*/
     function añadirValidaciónIndividual() {
-        const campos = ['.nombre-lb', '.nombre-lb-tg', '.vpc', '.etq_nom', '.subred', ".grp-seg"];
+        const campos = ['.nombre-lb', '.nombre-lb-tg', '.vpc', '.subred', ".grp-seg"];
         campos.forEach(selector => {
             const input = document.querySelector(selector);
             if (input) {
@@ -44,9 +44,15 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (selector === '.subred' || selector === '.grp-seg'){
                         regex = /^[a-zA-Z0-9_, ]*$/;
                         mensajeError = 'El campo solo puede contener letras, números, guiones bajos (_), comas y espacios.';
+                    
                     } else {
                         regex = /^[a-zA-Z0-9_]*$/;
                         mensajeError = 'El campo solo puede contener letras, números y guiones bajos (_).';
+                    }
+
+                    if (selector === '.nombre-lb' || selector === '.nombre-lb-tg') {
+                        regex = /^[a-z0-9]*$/;
+                        mensajeError = 'El campo solo puede contener letras minúsculas y números.';
                     }
 
                     if (!regex.test(input.value)) {
